@@ -1,0 +1,10 @@
+#!/bin/bash
+
+if [[ $(ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null && echo ok || echo error
+) = "ok" ]]; then
+	NET_STATUS="Link Up";
+else
+	NET_STATUS="Link Down";
+fi
+
+echo ${NET_STATUS}

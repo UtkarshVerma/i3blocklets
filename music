@@ -1,0 +1,69 @@
+#!/bin/bash
+# Based on https://aur.archlinux.org/packages/playerctl/
+
+INSTANCE="$BLOCK_INSTANCE";
+
+if [[ "$INSTANCE" != "" ]]; then
+	ARGUMENTS="--player $INSTANCE";
+fi
+
+case $BLOCK_BUTTON in
+	1) playerctl $ARGUMENTS previous ;;
+	2) playerctl $ARGUMENTS play-pause ;;
+	3) playerctl $ARGUMENTS next ;;
+esac
+
+ICON_PLAY="";
+ICON_PAUSE=" ⏸";
+ICON_STOP=" ⏹";
+CUR_ICON="";
+
+# If music player is "Audacious"
+if [[ "$(playerctl -l)" = "audacious" ]]; then
+	case $BLOCK_BUTTON in 
+		4) audtool playback-seek-relative 5 ;;
+		5) audtool playback-seek-relative -5 ;;
+	esac
+
+	PLAYER_STATUS=$(audtool playback-status);
+	SONG_ARTIST=$(audtool current-song-tuple-data artist);
+	SONG_TITLE=$(audtool current-song-tuple-data title);
+	SONG_DURATION="($(audtool current-song-output-length)/$(audtool current-song-length))";
+
+	if [[ $SONG_ARTIST = "" ]]; then
+		SONG_ARTIST="(Unknown Artist)";
+	fi
+
+	if [[ "$PLAYER_STATUS" = "paused" ]]; then
+		CUR_ICON=$ICON_PAUSE;
+		echo "$SONG_ARTIST - $SONG_TITLE $SONG_DURATION$CUR_ICON";
+	elif [[ "$PLAYER_STATUS" = "playing" ]]; then
+		CUR_ICON=$ICON_PLAY;
+		echo "$SONG_ARTIST - $SONG_TITLE $SONG_DURATION$CUR_ICON";
+	elif [[ "$PLAYER_STATUS" = "stopped" ]]; then
+		CUR_ICON=$ICON_STOP;
+		echo "$SONG_ARTIST - $SONG_TITLE$CUR_ICON";
+	fi
+
+# If music player isn't "Audacious"
+else
+	PLAYER_STATUS=$(playerctl $ARGUMENTS status);
+	SONG_ARTIST=$(playerctl $ARGUMENTS metadata artist);
+	SONG_TITLE=$(playerctl $ARGUMENTS metadata title);
+	SONG_INFO="$SONG_ARTIST - $SONG_TITLE";
+
+	if [[ "$SONG_ARTIST" = "" ]]; then
+		SONG_ARTIST="(Unknown Artist)";
+	fi
+
+	if [[ "$PLAYER_STATUS" = "Paused" ]]; then
+		CUR_ICON=$ICON_PAUSE;
+		echo "$SONG_INFO$CUR_ICON";
+	elif [[ "$PLAYER_STATUS" = "Playing" ]]; then
+		CUR_ICON=$ICON_PLAY;
+		echo "$SONG_INFO$CUR_ICON";
+	elif [[ "$PLAYER_STATUS" = "Stopped" ]]; then
+		CUR_ICON=$ICON_STOP;
+		echo "Stopped$CUR_ICON";
+	fi
+fi
