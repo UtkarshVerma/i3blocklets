@@ -21,7 +21,7 @@ signal=3
 ```
 You can also pass arguments to `playerctl` through the `instance` config variable. For example, `instance="-p audacious"` will be interpreted as `playerctl -p audacious <random command>`.
 
-##### The following actions can be performed via the mouse
+#### The following actions can be performed via the mouse
 * Left click - Switch to the previous song;
 * Right click - Switch to the next song;
 * Middle click - Pause/play the current song.
@@ -48,7 +48,7 @@ MAIL_PASSWORD="<your password>"
 ```
 Once done, specify the location of your credentials-file through the `instance` config variable.
 
-##### The following actions can be performed via the mouse
+#### The following actions can be performed via the mouse
 * Left click - Open GMail in the default browser;
 * Right click - Update mail count.
 
@@ -62,7 +62,7 @@ interval=10
 ```
 Shows the average load of the processor.
 
-##### The following actions can be performed via the mouse:
+#### The following actions can be performed via the mouse:
 * Left click- Refresh average load value.
 
 ---
@@ -88,7 +88,7 @@ This block shows the volume level in percent. To reduce load, this script is loa
 ```
 pkill -RTMIN+1 i3blocks
 ```
-##### The following actions can be performed via the mouse
+#### The following actions can be performed via the mouse
 * Left click - Mute;
 * Scroll up - Increase volume by 5%;
 * Scroll down - Decrease volume by 5%.
