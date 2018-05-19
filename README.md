@@ -1,5 +1,5 @@
 # i3blocklets
-![Demo](/scrot.jpg)
+![Demo](/scrot.jpeg)
 This repository contains the bash scripts which I use with [i3blocks](https://github.com/vivien/i3blocks).
 
 ## Dependencies
@@ -29,6 +29,8 @@ You can also pass arguments to `playerctl` through the `instance` config variabl
 
 >This seeking capability is only available for `audacious` currently.
 
+---
+
 ### GMail Block
 ```
 [gmail]
@@ -49,6 +51,8 @@ Once done, specify the location of your credentials-file through the `instance` 
 * Left click - Open GMail in the default browser;
 * Right click - Update mail count.
 
+---
+
 ### Average Load Block
 ```
 [load_average]
@@ -60,6 +64,8 @@ Shows the average load of the processor.
 ##### The following actions can be performed via the mouse:
 * Left click- Refresh average load value.
 
+---
+
 ### Storage Block
 ```
 [disk]
@@ -68,6 +74,8 @@ interval=3600
 instance=""
 ```
 This block shows the remaining space on your disk. By default, the free space of `$HOME` partition will be shown, however, you may specify other partitions as well using the `instance` config variable. For exampe, `instance="/dev/sda2"`.
+
+---
 
 ### Volume Block
 ```
@@ -83,6 +91,8 @@ pkill -RTMIN+1 i3blocks
 * Left click - Mute;
 * Scroll up - Increase volume by 5%;
 * Scroll down - Decrease volume by 5%.
+
+---
 
 ### Internet Block
 ```
