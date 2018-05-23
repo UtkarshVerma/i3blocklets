@@ -23,18 +23,10 @@
 #-------------------------------------------------------------------------------------
 
 # Based on https://aur.archlinux.org/packages/playerctl/
+# Also uses https://github.com/mooow/mooowscripts/blob/master/uscripts/playerctl-cmus
+# for cmus support
 
 INSTANCE="$BLOCK_INSTANCE";
-
-if [[ "$INSTANCE" != "" ]]; then
-	ARGUMENTS="--player $INSTANCE";
-fi
-
-case $BLOCK_BUTTON in
-	1) playerctl $ARGUMENTS previous ;;
-	2) playerctl $ARGUMENTS play-pause ;;
-	3) playerctl $ARGUMENTS next ;;
-esac
 
 ICON_PLAY="";
 ICON_PAUSE=" ⏸";
@@ -42,8 +34,11 @@ ICON_STOP=" ⏹";
 CUR_ICON="";
 
 # If music player is "Audacious"
-if [[ "$(playerctl -l)" = "audacious" ]]; then
+if [[ "$(playerctl-cmus -l)" = "audacious" ]]; then
 	case $BLOCK_BUTTON in 
+		1) audtool playlist-reverse ;;
+		2) audtool playback-playpause ;;
+		3) audtool playlist-advance ;;
 		4) audtool playback-seek-relative 5 ;;
 		5) audtool playback-seek-relative -5 ;;
 	esac
@@ -70,22 +65,32 @@ if [[ "$(playerctl -l)" = "audacious" ]]; then
 
 # If music player isn't "Audacious"
 else
-	PLAYER_STATUS=$(playerctl $ARGUMENTS status);
-	SONG_ARTIST=$(playerctl $ARGUMENTS metadata artist);
-	SONG_TITLE=$(playerctl $ARGUMENTS metadata title);
+	if [[ "$INSTANCE" != "" ]]; then
+		ARGUMENTS="--player $INSTANCE";
+	fi
+
+	case $BLOCK_BUTTON in
+		1) playerctl-cmus $ARGUMENTS previous ;;
+		2) playerctl-cmus $ARGUMENTS play-pause ;;
+		3) playerctl-cmus $ARGUMENTS next ;;
+	esac
+
+	PLAYER_STATUS=$(playerctl-cmus $ARGUMENTS status);
+	SONG_ARTIST=$(playerctl-cmus $ARGUMENTS metadata artist);
+	SONG_TITLE=$(playerctl-cmus $ARGUMENTS metadata title);
 	SONG_INFO="$SONG_ARTIST - $SONG_TITLE";
 
 	if [[ "$SONG_ARTIST" = "" ]]; then
 		SONG_ARTIST="(Unknown Artist)";
 	fi
 
-	if [[ "$PLAYER_STATUS" = "Paused" ]]; then
+	if [[ "${PLAYER_STATUS^}" = "Paused" ]]; then
 		CUR_ICON=$ICON_PAUSE;
 		echo "$SONG_INFO$CUR_ICON";
-	elif [[ "$PLAYER_STATUS" = "Playing" ]]; then
+	elif [[ "${PLAYER_STATUS^}" = "Playing" ]]; then
 		CUR_ICON=$ICON_PLAY;
 		echo "$SONG_INFO$CUR_ICON";
-	elif [[ "$PLAYER_STATUS" = "Stopped" ]]; then
+	elif [[ "${PLAYER_STATUS^}" = "Stopped" ]]; then
 		CUR_ICON=$ICON_STOP;
 		echo "Stopped$CUR_ICON";
 	fi
