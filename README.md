@@ -5,9 +5,13 @@ This repository contains the bash scripts which I use with [i3blocks](https://gi
 
 ## Dependencies
 To use these scripts, the following dependencies need to be satisfied:
-* pamixer - [cdemoulins/pamixer](https://github.com/cdemoulins/pamixer)
-* playerctl - [acrisci/playerctl](https://github.com/acrisci/playerctl)
-* playerctl-cmus - [moowscripts/playerctl-cmus](https://github.com/mooow/mooowscripts/blob/master/uscripts/playerctl-cmus)
+* **Volume Block:**
+** pamixer - [cdemoulins/pamixer](https://github.com/cdemoulins/pamixer)
+
+* **Music Block:**
+** playerctl - [acrisci/playerctl](https://github.com/acrisci/playerctl)
+** playerctl-cmus - [moow/moowscripts/playerctl-cmus](https://github.com/mooow/mooowscripts/blob/master/uscripts/playerctl-cmus)
+** formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime) 
 
 > Some additional fonts might be required to render the unicode emojis.
 
