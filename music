@@ -51,13 +51,16 @@ else
 		elapsedTime="$(cmus-remote -C status | sed -n 4p | tr -d -c 0-9)";
 		songLength="$(cmus-remote -C status | sed -n 3p | tr -d -c 0-9)";
 	else
-		elapsedTime=$(playerctl position);
-		songLength=$(( `playerctl metadata mpris:length`/1000000 ));
+		elapsedTime=$(playerctl-cmus position);
+		songLength=$(( `playerctl-cmus metadata mpris:length`/1000000 ));
 	fi
-	if [[ $(playerctl-cmus -l) !="spotify" ]]; then
+
+	## `playerctl position` doesn't work for "Spotify"
+	if [[ $(playerctl-cmus -l)!="spotify" ]]; then
 		songDuration=" (`formatTime ${elapsedTime%.*}`/`formatTime $songLength`)";
 	fi
-	
+fi
+
 if [[ "$songArtist" = "" ]]; then
 	songArtist="(Unknown Artist)";
 fi
