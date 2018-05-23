@@ -22,19 +22,21 @@
 # SOFTWARE.
 #-------------------------------------------------------------------------------------
 
-# Based on https://aur.archlinux.org/packages/playerctl/
+# Based on https://aur.archlinux.org/packages/playerctl
+# Uses https://github.com/UtkarshVerma/scripts/blob/master/formatTime
 # Also uses https://github.com/mooow/mooowscripts/blob/master/uscripts/playerctl-cmus
 # for cmus support
 
+#-------------------------------------------------------------------------------------
 INSTANCE="$BLOCK_INSTANCE";
 
+# Define cursor icons
 ICON_PLAY="";
 ICON_PAUSE=" ⏸";
 ICON_STOP=" ⏹";
-CUR_ICON="";
 
 # If music player is "Audacious"
-if [[ "$(playerctl-cmus -l)" = "audacious" ]]; then
+if [[ "$(playerctl-cmus -l | grep -o "audacious")" = "audacious" ]]; then
 	case $BLOCK_BUTTON in 
 		1) audtool playlist-reverse ;;
 		2) audtool playback-playpause ;;
@@ -46,22 +48,8 @@ if [[ "$(playerctl-cmus -l)" = "audacious" ]]; then
 	PLAYER_STATUS=$(audtool playback-status);
 	SONG_ARTIST=$(audtool current-song-tuple-data artist);
 	SONG_TITLE=$(audtool current-song-tuple-data title);
-	SONG_DURATION="($(audtool current-song-output-length)/$(audtool current-song-length))";
-
-	if [[ $SONG_ARTIST = "" ]]; then
-		SONG_ARTIST="(Unknown Artist)";
-	fi
-
-	if [[ "$PLAYER_STATUS" = "paused" ]]; then
-		CUR_ICON=$ICON_PAUSE;
-		echo "$SONG_ARTIST - $SONG_TITLE $SONG_DURATION$CUR_ICON";
-	elif [[ "$PLAYER_STATUS" = "playing" ]]; then
-		CUR_ICON=$ICON_PLAY;
-		echo "$SONG_ARTIST - $SONG_TITLE $SONG_DURATION$CUR_ICON";
-	elif [[ "$PLAYER_STATUS" = "stopped" ]]; then
-		CUR_ICON=$ICON_STOP;
-		echo "$SONG_ARTIST - $SONG_TITLE$CUR_ICON";
-	fi
+	SONG_INFO="$SONG_ARTIST - $SONG_TITLE";
+	SONG_DURATION=" ($(audtool current-song-output-length)/$(audtool current-song-length))";
 
 # If music player isn't "Audacious"
 else
@@ -73,25 +61,36 @@ else
 		1) playerctl-cmus $ARGUMENTS previous ;;
 		2) playerctl-cmus $ARGUMENTS play-pause ;;
 		3) playerctl-cmus $ARGUMENTS next ;;
+		4) [[ ! $(cmus-remote -C status) = "" ]] && cmus-remote -k +5 || playerctl-cmus position 5+ ;;
+		5) [[ ! $(cmus-remote -C status) = "" ]] && cmus-remote -k -5 || playerctl-cmus position 5- ;;
 	esac
 
 	PLAYER_STATUS=$(playerctl-cmus $ARGUMENTS status);
 	SONG_ARTIST=$(playerctl-cmus $ARGUMENTS metadata artist);
 	SONG_TITLE=$(playerctl-cmus $ARGUMENTS metadata title);
 	SONG_INFO="$SONG_ARTIST - $SONG_TITLE";
-
-	if [[ "$SONG_ARTIST" = "" ]]; then
-		SONG_ARTIST="(Unknown Artist)";
+	SONG_DURATION="";
+	if [[ ! $(cmus-remote -C status) = "" ]]; then
+		SONG_TIME="$(cmus-remote -C status | sed -n 4p | tr -d -c 0-9)";
+		SONG_LENGTH="$(cmus-remote -C status | sed -n 3p | tr -d -c 0-9)";
+	else
+		SONG_TIME=$(playerctl position);
+		SONG_LENGTH=$(( `playerctl metadata mpris:length`/1000000 ));
 	fi
+	SONG_DURATION=" (`formatTime ${SONG_TIME%.*}`/`formatTime $SONG_LENGTH`)";
+fi
 
-	if [[ "${PLAYER_STATUS^}" = "Paused" ]]; then
-		CUR_ICON=$ICON_PAUSE;
-		echo "$SONG_INFO$CUR_ICON";
-	elif [[ "${PLAYER_STATUS^}" = "Playing" ]]; then
-		CUR_ICON=$ICON_PLAY;
-		echo "$SONG_INFO$CUR_ICON";
-	elif [[ "${PLAYER_STATUS^}" = "Stopped" ]]; then
-		CUR_ICON=$ICON_STOP;
-		echo "Stopped$CUR_ICON";
-	fi
+if [[ "$SONG_ARTIST" = "" ]]; then
+	SONG_ARTIST="(Unknown Artist)";
+fi
+
+if [[ "${PLAYER_STATUS^}" = "Paused" ]]; then
+	CUR_ICON=$ICON_PAUSE;
+	echo "$SONG_INFO$SONG_DURATION$CUR_ICON";
+elif [[ "${PLAYER_STATUS^}" = "Playing" ]]; then
+	CUR_ICON=$ICON_PLAY;
+	echo "$SONG_INFO$SONG_DURATION$CUR_ICON";
+elif [[ "${PLAYER_STATUS^}" = "Stopped" ]]; then
+	CUR_ICON=$ICON_STOP;
+	echo "Stopped$CUR_ICON";
 fi
