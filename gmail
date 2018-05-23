@@ -2,33 +2,33 @@
 #----------------------------------------------------------------------------------------------------
 # Requires https://www.google.com/settings/security/lesssecureapps for gmail.
 #----------------------------------------------------------------------------------------------------
-CONFIG_FILE="${BLOCK_INSTANCE}"
-CONFIG_FILE=${CONFIG_FILE/\~/$HOME}
+configFile="${BLOCK_INSTANCE}"
+configFile=${configFile/\~/$HOME}
 
 case $BLOCK_BUTTON in 
 	1) xdg-open  https://mail.google.com ;;
 	2) pkill -RTMIN+2 i3blocks ;;
 esac
 
-if [[ ! -f "${CONFIG_FILE}" ]]; then
-  echo "${CONFIG_FILE}"
+if [[ ! -f "${configFile}" ]]; then
+  echo "${configFile}"
   exit 33
 fi
 
-source "${CONFIG_FILE}"
+source "${configFile}"
 
 if [[ $(ping -c 1 8.8.8.8 | grep -o "Unreachable") = "Unreachable" ]]; then
-	NET_STATUS="down"
+	netStatus="down"
 else
-	NET_STATUS="up"
+	netStatus="up"
 fi
 
-if [[ "${NET_STATUS}" = "up" ]]; then
-	COUNT=`curl -su $MAIL_USER:$MAIL_PASSWORD https://mail.google.com/mail/feed/atom || echo "<fullcount>unknown number of</fullcount>"`
-	COUNT=`echo "$COUNT" | grep -oPm1 "(?<=<fullcount>)[^<]+" `
-	if [ "$COUNT" = "0" ]; then
+if [[ "${netStatus}" = "up" ]]; then
+	count=`curl -su $MAIL_USER:$MAIL_PASSWORD https://mail.google.com/mail/feed/atom || echo "<fullcount>unknown number of</fullcount>"`
+	count=`echo "$count" | grep -oPm1 "(?<=<fullcount>)[^<]+" `
+	if [ "$count" = "0" ]; then
 		echo ""
 	else
-		echo $COUNT
+		echo $count
 	fi
 fi

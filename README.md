@@ -29,8 +29,7 @@ You can also pass arguments to `playerctl` through the `instance` config variabl
 * Scroll up - Seek song forward by 5 seconds;
 * Scroll down - Seek song backward by 5 seconds.
 
->~~This seeking capability is only available for `audacious` currently.~~
-The seeking capability has now been extended to all music players.
+>~~This seeking capability is only available for `audacious` currently.~~<br>The seeking capability has now been extended to all music players.
 
 ---
 

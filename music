@@ -8,9 +8,9 @@
 INSTANCE="$BLOCK_INSTANCE";
 
 # Define cursor icons
-ICON_PLAY="";
-ICON_PAUSE=" ⏸";
-ICON_STOP=" ⏹";
+playIcon="";
+pauseIcon=" ⏸";
+stopIcon=" ⏹";
 
 # If music player is "Audacious"
 if [[ "$(playerctl-cmus -l | grep -o "audacious")" = "audacious" ]]; then
@@ -22,11 +22,11 @@ if [[ "$(playerctl-cmus -l | grep -o "audacious")" = "audacious" ]]; then
 		5) audtool playback-seek-relative -5 ;;
 	esac
 
-	PLAYER_STATUS=$(audtool playback-status);
-	SONG_ARTIST=$(audtool current-song-tuple-data artist);
-	SONG_TITLE=$(audtool current-song-tuple-data title);
-	SONG_INFO="$SONG_ARTIST - $SONG_TITLE";
-	SONG_DURATION=" ($(audtool current-song-output-length)/$(audtool current-song-length))";
+	playerStatus=$(audtool playback-status);
+	songArtist=$(audtool current-song-tuple-data artist);
+	songTitle=$(audtool current-song-tuple-data title);
+	songInfo="$songArtist - $songTitle";
+	songDuration=" ($(audtool current-song-output-length)/$(audtool current-song-length))";
 
 # If music player isn't "Audacious"
 else
@@ -42,34 +42,30 @@ else
 		5) [[ ! $(cmus-remote -C status) = "" ]] && cmus-remote -k -5 || playerctl-cmus position 5- ;;
 	esac
 
-	PLAYER_STATUS=$(playerctl-cmus $ARGUMENTS status);
-	SONG_ARTIST=$(playerctl-cmus $ARGUMENTS metadata artist);
-	SONG_TITLE=$(playerctl-cmus $ARGUMENTS metadata title);
-	SONG_INFO="$SONG_ARTIST - $SONG_TITLE";
-	SONG_DURATION="";
+	playerStatus=$(playerctl-cmus $ARGUMENTS status);
+	songArtist=$(playerctl-cmus $ARGUMENTS metadata artist);
+	songTitle=$(playerctl-cmus $ARGUMENTS metadata title);
+	songInfo="$songArtist - $songTitle";
+	songDuration="";
 	if [[ ! $(cmus-remote -C status) = "" ]]; then
-		SONG_TIME="$(cmus-remote -C status | sed -n 4p | tr -d -c 0-9)";
-		SONG_LENGTH="$(cmus-remote -C status | sed -n 3p | tr -d -c 0-9)";
+		elapsedTime="$(cmus-remote -C status | sed -n 4p | tr -d -c 0-9)";
+		songLength="$(cmus-remote -C status | sed -n 3p | tr -d -c 0-9)";
 	else
-		SONG_TIME=$(playerctl position);
-		SONG_LENGTH=$(( `playerctl metadata mpris:length`/1000000 ));
+		elapsedTime=$(playerctl position);
+		songLength=$(( `playerctl metadata mpris:length`/1000000 ));
 	fi
-	if [[ $SONG_TIME != 0 ]]; then
-		SONG_DURATION=" (`formatTime ${SONG_TIME%.*}`/`formatTime $SONG_LENGTH`)";
+	if [[ $(playerctl-cmus -l) !="spotify" ]]; then
+		songDuration=" (`formatTime ${elapsedTime%.*}`/`formatTime $songLength`)";
 	fi
+	
+if [[ "$songArtist" = "" ]]; then
+	songArtist="(Unknown Artist)";
 fi
 
-if [[ "$SONG_ARTIST" = "" ]]; then
-	SONG_ARTIST="(Unknown Artist)";
-fi
-
-if [[ "${PLAYER_STATUS^}" = "Paused" ]]; then
-	CUR_ICON=$ICON_PAUSE;
-	echo "$SONG_INFO$SONG_DURATION$CUR_ICON";
-elif [[ "${PLAYER_STATUS^}" = "Playing" ]]; then
-	CUR_ICON=$ICON_PLAY;
-	echo "$SONG_INFO$SONG_DURATION$CUR_ICON";
-elif [[ "${PLAYER_STATUS^}" = "Stopped" ]]; then
-	CUR_ICON=$ICON_STOP;
-	echo "Stopped$CUR_ICON";
+if [[ "${playerStatus^}" = "Paused" ]]; then
+	echo "$songInfo$songDuration$pauseIcon";
+elif [[ "${playerStatus^}" = "Playing" ]]; then
+	echo "$songInfo$songDuration$playIcon";
+elif [[ "${playerStatus^}" = "Stopped" ]]; then
+	echo "Stopped$stopIcon";
 fi
