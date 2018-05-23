@@ -1,10 +1,10 @@
 #!/bin/bash
-#-------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------------------------------
 # Based on https://aur.archlinux.org/packages/playerctl
 # Uses https://github.com/UtkarshVerma/scripts/blob/master/formatTime
 # Also uses https://github.com/mooow/mooowscripts/blob/master/uscripts/playerctl-cmus
-# for cmus support
-#-------------------------------------------------------------------------------------
+# for cmus support.
+#----------------------------------------------------------------------------------------------------
 INSTANCE="$BLOCK_INSTANCE";
 
 # Define cursor icons
