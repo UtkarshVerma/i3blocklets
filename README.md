@@ -10,7 +10,6 @@ To use these scripts, the following dependencies need to be satisfied:
 
 * **Music Block:**
   - playerctl - [acrisci/playerctl](https://github.com/acrisci/playerctl)
-  - playerctl-cmus - [moow/moowscripts/playerctl-cmus](https://github.com/mooow/mooowscripts/blob/master/uscripts/playerctl-cmus)
   - formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime) 
 
 > Some additional fonts might be required to render the unicode emojis.
@@ -36,6 +35,8 @@ You can also pass arguments to `playerctl` through the `instance` config variabl
 ~~This seeking capability is only available for `audacious` currently.~~
 
 The seeking capability has now been extended to all music players.
+
+This script focuses only on MPRIS media players. Therefore this script won't work for `cmus`< v2.8.0. You may either update `cmus` or just add a bit of code as a workaround as done in this [older commit](https://github.com/UtkarshVerma/i3blocklets/blob/77ec353d01a12539edb3a3b211dd06f275807d2d/music).
 
 ---
 

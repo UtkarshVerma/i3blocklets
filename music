@@ -2,8 +2,6 @@
 #----------------------------------------------------------------------------------------------------
 # Based on https://aur.archlinux.org/packages/playerctl
 # Uses https://github.com/UtkarshVerma/scripts/blob/master/formatTime
-# Also uses https://github.com/mooow/mooowscripts/blob/master/uscripts/playerctl-cmus
-# for cmus support.
 #----------------------------------------------------------------------------------------------------
 INSTANCE="$BLOCK_INSTANCE";
 
@@ -12,53 +10,29 @@ playIcon="";
 pauseIcon=" ⏸";
 stopIcon=" ⏹";
 
-# If music player is "Audacious"
-if [[ "$(playerctl-cmus -l | grep -o "audacious")" = "audacious" ]]; then
-	case $BLOCK_BUTTON in 
-		1) audtool playlist-reverse ;;
-		2) audtool playback-playpause ;;
-		3) audtool playlist-advance ;;
-		4) audtool playback-seek-relative 5 ;;
-		5) audtool playback-seek-relative -5 ;;
-	esac
+if [[ "$INSTANCE" != "" ]]; then
+	ARGUMENTS="--player $INSTANCE";
+fi
 
-	playerStatus=$(audtool playback-status);
-	songArtist=$(audtool current-song-tuple-data artist);
-	songTitle=$(audtool current-song-tuple-data title);
-	songInfo="$songArtist - $songTitle";
-	songDuration=" ($(audtool current-song-output-length)/$(audtool current-song-length))";
+case $BLOCK_BUTTON in
+	1) playerctl $ARGUMENTS previous ;;
+	2) playerctl $ARGUMENTS play-pause ;;
+	3) playerctl $ARGUMENTS next ;;
+	4) playerctl $ARGUMENTS position 5+ ;;
+	5) playerctl $ARGUMENTS position 5- ;;
+esac
 
-# If music player isn't "Audacious"
-else
-	if [[ "$INSTANCE" != "" ]]; then
-		ARGUMENTS="--player $INSTANCE";
-	fi
+playerStatus=$(playerctl $ARGUMENTS status);
+songArtist=$(playerctl $ARGUMENTS metadata artist);
+songTitle=$(playerctl $ARGUMENTS metadata title);
+songInfo="$songArtist - $songTitle";
+songDuration="";
+elapsedTime=$(playerctl position);
+songLength=$(( `playerctl metadata mpris:length`/1000000 ));
 
-	case $BLOCK_BUTTON in
-		1) playerctl-cmus $ARGUMENTS previous ;;
-		2) playerctl-cmus $ARGUMENTS play-pause ;;
-		3) playerctl-cmus $ARGUMENTS next ;;
-		4) [[ ! $(cmus-remote -C status) = "" ]] && cmus-remote -k +5 || playerctl-cmus position 5+ ;;
-		5) [[ ! $(cmus-remote -C status) = "" ]] && cmus-remote -k -5 || playerctl-cmus position 5- ;;
-	esac
-
-	playerStatus=$(playerctl-cmus $ARGUMENTS status);
-	songArtist=$(playerctl-cmus $ARGUMENTS metadata artist);
-	songTitle=$(playerctl-cmus $ARGUMENTS metadata title);
-	songInfo="$songArtist - $songTitle";
-	songDuration="";
-	if [[ ! $(cmus-remote -C status) = "" ]]; then
-		elapsedTime="$(cmus-remote -C status | sed -n 4p | tr -d -c 0-9)";
-		songLength="$(cmus-remote -C status | sed -n 3p | tr -d -c 0-9)";
-	else
-		elapsedTime=$(playerctl-cmus position);
-		songLength=$(( `playerctl-cmus metadata mpris:length`/1000000 ));
-	fi
-
-	## `playerctl position` doesn't work for "Spotify"
-	if [[ $(playerctl-cmus -l)!="spotify" ]]; then
-		songDuration=" (`formatTime ${elapsedTime%.*}`/`formatTime $songLength`)";
-	fi
+## `playerctl position` doesn't work for "Spotify"
+if [[ $(playerctl -l)!="spotify" ]]; then
+	songDuration=" (`formatTime ${elapsedTime%.*}`/`formatTime $songLength`)";
 fi
 
 if [[ "$songArtist" = "" ]]; then
