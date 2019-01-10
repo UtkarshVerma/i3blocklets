@@ -10,7 +10,7 @@ To use these scripts, the following dependencies need to be satisfied:
 
 * **Music Block:**
   - playerctl - [acrisci/playerctl](https://github.com/acrisci/playerctl)
-  - formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime) 
+  - ~~formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime)~~
 
 > Some additional fonts might be required to render the unicode emojis.
 
