@@ -27,12 +27,12 @@ songArtist=$(playerctl $ARGUMENTS metadata artist);
 songTitle=$(playerctl $ARGUMENTS metadata title);
 songInfo="$songArtist - $songTitle";
 songDuration="";
-elapsedTime=$(playerctl position);
-songLength=$(( `playerctl metadata mpris:length`/1000000 ));
+elapsedTime=$(playerctl metadata --format "{{ duration(position) }}");
+songLength=$(playerctl metadata --format "{{ duration(mpris:length) }}");
 
 ## `playerctl position` doesn't work for "Spotify"
 if [[ $(playerctl -l)!="spotify" ]]; then
-	songDuration=" (`formatTime ${elapsedTime%.*}`/`formatTime $songLength`)";
+	songDuration=" ($elapsedTime/$songLength)";
 fi
 
 if [[ "$songArtist" = "" ]]; then
