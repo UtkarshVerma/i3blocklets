@@ -5,14 +5,32 @@ This repository contains the bash scripts which I use with [i3blocks](https://gi
 
 ## Dependencies
 To use these scripts, the following dependencies need to be satisfied:
+* **Font awesome**
+  - In Debian and derived: `apt-get install fonts-font-awesome`
+
 * **Volume Block:**
   - pamixer - [cdemoulins/pamixer](https://github.com/cdemoulins/pamixer)
 
 * **Music Block:**
   - playerctl - [acrisci/playerctl](https://github.com/acrisci/playerctl)
-  - formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime) 
+  - formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime)
 
 > Some additional fonts might be required to render the unicode emojis.
+
+## Installation
+
+  - install Font Awesome: `apt-get install fonts-font-awesome` (adapt to your distribution)
+  - copy sample conf file: `cp sample.conf i3blocks.conf`
+  - edit this file and:
+    - replace `PATH_TO_BLOCKLETS` to the path you copied those files
+    - add other blocklets if you want
+  - in your i3-config file:
+    ```
+    bar {
+        status_command i3blocks -c PATH_TO_BLOCKLETS/i3blocks.conf
+    }
+    ```
+    (change PATH_TO_BLOCKLETS to the path you copied those files)
 
 ## Usage
 ### Music Block
@@ -48,7 +66,7 @@ instance=~/.randomfile
 interval=1800
 signal=2
 ```
-This block will check your gmail account for mails every 1800 seconds, that is the `interval` time. 
+This block will check your gmail account for mails every 1800 seconds, that is the `interval` time.
 To specify your credentials, store them in a separate file, in my case `.randomfile`, as follows:
 ```
 MAIL_USER="<your email id>"
