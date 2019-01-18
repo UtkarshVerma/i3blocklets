@@ -5,14 +5,25 @@ This repository contains the bash scripts which I use with [i3blocks](https://gi
 
 ## Dependencies
 To use these scripts, the following dependencies need to be satisfied:
+
 * **Volume Block:**
   - pamixer - [cdemoulins/pamixer](https://github.com/cdemoulins/pamixer)
 
 * **Music Block:**
   - playerctl - [acrisci/playerctl](https://github.com/acrisci/playerctl)
-  - formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime) 
+  - ~~formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime)~~
 
-> Some additional fonts might be required to render the unicode emojis.
+* **[FontAwesome](https://fontawesome.com/)** fonts(tested with v4.7.0) are required to render the unicode emojis, therefore specify it in i3bar config as shown:
+```
+bar {
+    # .... other stuff
+    font pango:DejaVu Sans Mono, FontAwesome 9
+}
+```
+
+## Installation
+  * Place `example.conf` as `i3blocks.conf` in your i3 config directory.
+  * Replace `PATH_TO_BLOCKLETS` in the `i3blocks.conf` file with the directory's path which contains your blocklets.
 
 ## Usage
 ### Music Block
@@ -48,7 +59,7 @@ instance=~/.randomfile
 interval=1800
 signal=2
 ```
-This block will check your gmail account for mails every 1800 seconds, that is the `interval` time. 
+This block will check your gmail account for mails every 1800 seconds, that is the `interval` time.
 To specify your credentials, store them in a separate file, in my case `.randomfile`, as follows:
 ```
 MAIL_USER="<your email id>"
@@ -109,5 +120,3 @@ pkill -RTMIN+1 i3blocks
 interval=5
 ```
 This block shows whether your PC is connected to the internet or not. It relies on the `ping` command.
-
-For additional insight, you may also look into my i3blocks config file: [i3blocks.conf](https://github.com/UtkarshVerma/dotfiles/blob/master/i3/i3blocks.conf)

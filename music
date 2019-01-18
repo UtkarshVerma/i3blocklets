@@ -1,7 +1,6 @@
 #!/bin/bash
 #----------------------------------------------------------------------------------------------------
-# Based on https://aur.archlinux.org/packages/playerctl
-# Uses https://github.com/UtkarshVerma/scripts/blob/master/formatTime
+# Based on https://github.com/acrisci/playerctl
 #----------------------------------------------------------------------------------------------------
 INSTANCE="$BLOCK_INSTANCE";
 
