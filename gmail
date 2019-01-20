@@ -49,6 +49,10 @@ if [[ "${netStatus}" = "up" ]]; then
 	tmp=$(mktemp);
 	jq ".access_token = \"${accessToken}\"" "$tokenFile" > "$tmp" && mv "$tmp" $tokenFile;
 
+	#Update access_token in tokenFile
+	tmp=`mktemp`;
+	jq ".access_token = \"${accessToken}\"" $tokenFile > "$tmp" && mv "$tmp" $tokenFile;
+
 	#Fetch unread mails count
 	count=$(curl -s -H "Authorization: Bearer ${accessToken}" \
 		'https://www.googleapis.com/gmail/v1/users/'"${email}"'/messages?q=is:unread' \
