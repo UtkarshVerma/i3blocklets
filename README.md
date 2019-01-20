@@ -13,6 +13,9 @@ To use these scripts, the following dependencies need to be satisfied:
   - playerctl - [acrisci/playerctl](https://github.com/acrisci/playerctl)
   - ~~formatTime - [UtkarshVerma/scripts/formatTime](https://github.com/UtkarshVerma/scripts/blob/master/formatTime)~~
 
+* **Gmail Block:**
+  - jq - [stedolan/js](https://github.com/stedolan/jq)
+
 * **[FontAwesome](https://fontawesome.com/)** fonts(tested with v4.7.0) are required to render the unicode emojis, therefore specify it in i3bar config as shown:
 ```
 bar {
@@ -22,7 +25,7 @@ bar {
 ```
 
 ## Installation
-  * Place `example.conf` as `i3blocks.conf` in your i3 config directory.
+  * Place [`example.conf`](/resources/example.conf) as `i3blocks.conf` in your i3 config directory.
   * Replace `PATH_TO_BLOCKLETS` in the `i3blocks.conf` file with the directory's path which contains your blocklets.
 
 ## Usage
@@ -51,21 +54,29 @@ This script focuses only on MPRIS media players. Therefore this script won't wor
 
 ---
 
-### GMail Block
+### Gmail Block
 ```
 [gmail]
 label=📧
-instance=~/.randomfile
+instance=.gmail
 interval=1800
 signal=2
 ```
 This block will check your gmail account for mails every 1800 seconds, that is the `interval` time.
-To specify your credentials, store them in a separate file, in my case `.randomfile`, as follows:
-```
-MAIL_USER="<your email id>"
-MAIL_PASSWORD="<your password>"
-```
-Once done, specify the location of your credentials-file through the `instance` config variable.
+This blocket uses [OAuth2](https://oauth.net/2/) for authorizing itself. To use this blocklet:
+* Create a project on [Google API Console](https://console.developers.google.com/), [enable Gmail API](https://developers.google.com/identity/protocols/OAuth2InstalledApp#enable-apis) for your project, and [create authorization credentials](https://developers.google.com/identity/protocols/OAuth2InstalledApp#creatingcred) for this blocklet. Choose **Other** as *Application Type* while creating the OAuth client ID. Make sure to provide your application `read-only` access.
+* Once created, take note of the **Client ID** and **Client Secret**. These will be used later on.
+* Edit the [`configFile`](/resources/gmail/configFile) for this blocklet according to your needs and place it in the `$HOME` directory. You may rename it if you like. I personally prefer `.gmail`.
+  > The `tokenFile` variable must contain the path to the file which you want to create for storing access tokens for the API.
+* Now, generate your access token using [genToken.sh](/resources/gmail/genToken.sh) by running `./genToken.sh -c <configFile>` in the terminal. For example:
+
+  ```bash
+  ./genToken.sh -c ~/.gmail
+  ```
+  This will generate a JSON file at the path specified in `tokenFile` variable in `configFile`.
+
+Everything's done now. Just add the `gmail` block to your `i3blocks` config as shown above.
+> Note that the `instance` variable only holds the name of the `configFile`, and not its path. 
 
 #### The following actions can be performed via the mouse
 * Left click - Open GMail in the default browser;
@@ -120,3 +131,5 @@ pkill -RTMIN+1 i3blocks
 interval=5
 ```
 This block shows whether your PC is connected to the internet or not. It relies on the `ping` command.
+
+For additional insight, you may also look into my i3blocks config file: [i3blocks.conf](https://github.com/UtkarshVerma/dotfiles/blob/master/i3/i3blocks.conf).
