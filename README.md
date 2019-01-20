@@ -1,5 +1,5 @@
 # i3blocklets
-![Demo](/scrot.jpeg)
+![Demo](/scrot.png)
 
 This repository contains the bash scripts which I use with [i3blocks](https://github.com/vivien/i3blocks).
 
