@@ -73,7 +73,7 @@ This blocket uses [OAuth2](https://oauth.net/2/) for authorizing itself. To use 
   ```bash
   ./genToken.sh -c ~/.gmail
   ```
-  This will generate a JSON file at the path specified in `tokenFile` variable in `configFile`.
+  Google's user consent webpage will open up in your default browser. Allow this application there. This will generate a JSON file at the path specified in `tokenFile` variable in `configFile`.
 
 Everything's done now. Just add the `gmail` block to your `i3blocks` config as shown above.
 > Note that the `instance` variable only holds the name of the `configFile`, and not its path. 
