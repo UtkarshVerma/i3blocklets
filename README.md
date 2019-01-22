@@ -102,6 +102,7 @@ Shows the average load of the processor.
 [disk]
 label=🗄
 interval=3600
+markup=pango
 instance=""
 ```
 This block shows the remaining space on your disk. By default, the free space of `$HOME` partition will be shown, however, you may specify other partitions as well using the `instance` config variable. For exampe, `instance="/dev/sda2"`.

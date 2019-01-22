@@ -1,18 +1,19 @@
 #!/bin/bash
 #----------------------------------------------------------------------------------------------------
-# Based on https://github.com/acrisci/playerctl
+# Requires playerctl - https://github.com/acrisci/playerctl
 #----------------------------------------------------------------------------------------------------
-INSTANCE="$BLOCK_INSTANCE";
+#Exit script if no players running
+[[ $(playerctl status | grep "No players found") = "" ]] || exit 3;
 
 # Define cursor icons
 playIcon="";
 pauseIcon=" ⏸";
 stopIcon=" ⏹";
 
-if [[ "$INSTANCE" != "" ]]; then
-	ARGUMENTS="--player $INSTANCE";
-fi
+#User provided args for playerctl
+ARGUMENTS="$INSTANCE";
 
+#Mouse actions for the block
 case $BLOCK_BUTTON in
 	1) playerctl $ARGUMENTS previous ;;
 	2) playerctl $ARGUMENTS play-pause ;;
@@ -21,23 +22,22 @@ case $BLOCK_BUTTON in
 	5) playerctl $ARGUMENTS position 5- ;;
 esac
 
+#Define song info variables
 playerStatus=$(playerctl $ARGUMENTS status);
-songArtist=$(playerctl $ARGUMENTS metadata artist);
+songArtist="$(playerctl $ARGUMENTS metadata artist)";
+songArtist="${songArtist:-(Unknown Artist)}";
 songTitle=$(playerctl $ARGUMENTS metadata title);
 songInfo="$songArtist - $songTitle";
 songDuration="";
 elapsedTime=$(playerctl metadata --format "{{ duration(position) }}");
 songLength=$(playerctl metadata --format "{{ duration(mpris:length) }}");
 
-## `playerctl position` doesn't work for "Spotify"
-if [[ $(playerctl -l)!="spotify" ]]; then
+#`playerctl position` doesn't work for "Spotify"
+if [[ $(playerctl -l) != "spotify" ]]; then
 	songDuration=" ($elapsedTime/$songLength)";
 fi
 
-if [[ "$songArtist" = "" ]]; then
-	songArtist="(Unknown Artist)";
-fi
-
+#Display output
 if [[ "${playerStatus^}" = "Paused" ]]; then
 	echo "$songInfo$songDuration$pauseIcon";
 elif [[ "${playerStatus^}" = "Playing" ]]; then

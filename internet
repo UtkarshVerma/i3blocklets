@@ -1,10 +1,4 @@
 #!/bin/bash
-
-if [[ $(ping -q -w 1 -c 1 `ip r | grep default | cut -d ' ' -f 3` > /dev/null && echo ok || echo error
-) = "ok" ]]; then
-	netStatus="Link Up";
-else
-	netStatus="Link Down";
-fi
-
-echo $netStatus
+#----------------------------------------------------------------------------------------------------
+#Check internet connectivity through ping exit code
+ping -q -w 1 -c 1 8.8.8.8 2>&1 > /dev/null && echo "Link Up" || echo "Link Down";
