@@ -3,7 +3,7 @@
 # Requires jq - https://stedolan.github.io/jq
 #----------------------------------------------------------------------------------------------------
 #Exit the script if there's no internet
-ping -q -c1 -w1 8.8.8.8 2>&1 > /dev/null || exit 3;
+ping -q -c1 -w1 8.8.8.8 2>&1 > /dev/null || exit 33;
 
 #Path to config file
 configFile="$HOME/$BLOCK_INSTANCE";
@@ -11,7 +11,7 @@ configFile="$HOME/$BLOCK_INSTANCE";
 #Exit script if no config file found
 if [[ ! -f "$configFile" ]]; then
 	echo "Config file not found!";
-	exit 3;
+	exit 33;
 fi
 
 #Mouse actions for the block
