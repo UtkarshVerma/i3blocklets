@@ -1,4 +1,8 @@
 #!/bin/bash
 #----------------------------------------------------------------------------------------------------
 #Check internet connectivity through ping exit code
-ping -q -w 1 -c 1 8.8.8.8 2>&1 > /dev/null && echo "Link Up" || echo "Link Down";
+if ping -q -w 1 -c 1 8.8.8.8 2>&1 > /dev/null; then
+	echo "<span foreground='green'>Link Up</span>"; 
+else
+	echo "<span foreground='red'>Link Down</span>";
+fi

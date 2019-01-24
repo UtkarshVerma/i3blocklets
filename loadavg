@@ -1,0 +1,10 @@
+#!/bin/bash
+#----------------------------------------------------------------------------------------------------
+threshold=${BLOCK_INSTANCE:-5};
+load=$(cut -d ' ' -f1 /proc/loadavg);
+
+#Display as red if load exceeds threshold
+if (( $(echo "$load $threshold" | awk '{print ($1 > $2)}') )); then
+	echo "<span foreground='red'>$load</span>";
+else echo $load;
+fi

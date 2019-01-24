@@ -12,7 +12,7 @@ avail=$(df -h -P -l "$dir" | tail -1 | awk '{print $4}' | tr -dc '0-9');
 
 #Display output
 if (( $(( $avail*100/$total )) < $lowAlert )); then
-	echo "<span foreground='#FF0000'><i>${avail}G</i></span>";
+	echo "<span foreground='red'>${avail}G</span>";
 else
 	echo "${avail}G";
 fi

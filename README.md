@@ -58,8 +58,8 @@ This script focuses only on MPRIS media players. Therefore this script won't wor
 ```
 [gmail]
 label=📧
-instance=.gmail
 interval=1800
+instance=.gmail
 signal=2
 ```
 This block will check your gmail account for mails every 1800 seconds, that is the `interval` time.
@@ -86,11 +86,13 @@ Everything's done now. Just add the `gmail` block to your `i3blocks` config as s
 
 ### Average Load Block
 ```
-[load_average]
+[loadavg]
 label=
 interval=10
+markup=pango
+instance=3
 ```
-Shows the average load of the processor.
+Shows the average load of the processor. The output is colored **red** if the *average load* exceeds the *threshold value*. The threshold value can be provided through `instance` variable, which defaults to `5`.
 
 #### The following actions can be performed via the mouse:
 * Left click- Refresh average load value.
@@ -129,8 +131,14 @@ pkill -RTMIN+1 i3blocks
 ### Internet Block
 ```
 [internet]
-interval=5
+interval=1800
+markup=pango
 ```
 This block shows whether your PC is connected to the internet or not. It relies on the `ping` command.
+
+#### The following actions can be performed via the mouse
+* Left click - Refresh internet status.
+
+---
 
 For additional insight, you may also look into my i3blocks config file: [i3blocks.conf](https://github.com/UtkarshVerma/dotfiles/blob/master/i3/i3blocks.conf).
