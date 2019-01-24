@@ -2,8 +2,8 @@
 #----------------------------------------------------------------------------------------------------
 # Requires playerctl - https://github.com/acrisci/playerctl
 #----------------------------------------------------------------------------------------------------
-#Exit script if no players running
-[[ $(playerctl status | grep "No players found") = "" ]] || exit 3;
+#Exit the script if no music players running
+[[ "$(playerctl status 2>&1)" = "No players found" ]] && exit 33;
 
 # Define cursor icons
 playIcon="";
