@@ -60,7 +60,6 @@ This script focuses only on MPRIS media players. Therefore this script won't wor
 label=📧
 interval=1800
 instance=.gmail
-signal=2
 ```
 This block will check your gmail account for mails every 1800 seconds, that is the `interval` time.
 This blocket uses [OAuth2](https://oauth.net/2/) for authorizing itself. To use this blocklet:

@@ -17,7 +17,6 @@ fi
 #Mouse actions for the block
 case $BLOCK_BUTTON in 
 	1) xdg-open  https://mail.google.com ;;
-	2) pkill -RTMIN+2 i3blocks ;;
 esac
 
 #Source variables from config file
