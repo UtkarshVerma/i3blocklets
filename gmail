@@ -3,7 +3,7 @@
 # Requires jq - https://stedolan.github.io/jq
 #----------------------------------------------------------------------------------------------------
 #Exit the script if there's no internet
-ping -q -c1 -w1 8.8.8.8 2>&1 > /dev/null || exit 33;
+ping -c 1 8.8.8.8 > /dev/null 2>&1 || exit 33;
 
 #Path to config file
 configFile="$HOME/$BLOCK_INSTANCE";
