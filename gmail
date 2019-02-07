@@ -16,7 +16,7 @@ fi
 
 #Mouse actions for the block
 case $BLOCK_BUTTON in 
-	1) xdg-open  https://mail.google.com ;;
+	1) xdg-open  https://mail.google.com > /dev/null 2>&1 ;;
 esac
 
 #Source variables from config file
