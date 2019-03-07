@@ -7,8 +7,8 @@
 
 # Define cursor icons
 playIcon="";
-pauseIcon=" ⏸";
-stopIcon=" ⏹";
+pauseIcon=" ⏸️";
+stopIcon=" ⏹️";
 
 #User provided args for playerctl
 ARGUMENTS="$INSTANCE";
