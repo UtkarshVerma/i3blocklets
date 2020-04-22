@@ -70,12 +70,15 @@ This blocket uses [OAuth2](https://oauth.net/2/) for authorizing itself. To use 
 * Now, generate your access token using [genToken.sh](/resources/gmail/genToken.sh) by running `./genToken.sh -c <configFile>` in the terminal. For example:
 
   ```bash
-  ./genToken.sh -c ~/.gmail
+  # Specify config file using -c flag
+  ./genToken.sh -c <path to config file>
+  # Or simply use ~/.gmail as config file
+  ./genToken.sh
   ```
   Google's user consent webpage will open up in your default browser. Allow this application there. This will generate a JSON file at the path specified in `tokenFile` variable in `configFile`.
 
 Everything's done now. Just add the `gmail` block to your `i3blocks` config as shown above.
-> Note that the `instance` variable only holds the name of the `configFile`, and not its path. 
+> Note that the `instance` variable holds the path of the config file relative to the home directory, therefore *.gmail* is implicitly expanded to *~/.gmail*. 
 
 #### The following actions can be performed via the mouse
 * Left click - Open GMail in the default browser;

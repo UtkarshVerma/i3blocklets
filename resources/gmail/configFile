@@ -1,14 +1,4 @@
-#API variables
-clientId=<your client id>;
-clientSecret=<your client secret>;
-scope="https://www.googleapis.com/auth/gmail.readonly";
-
-#Port to be used for fetching access token
-port=5000;
-redirectUri="http://localhost:${port}";
-
-#This is optional, providing this autofills email during OAuth authorization
-email="<your email address>";
-
-#File for storing API access tokens
-tokenFile="<path to tokenFile>";
+# API variables
+clientId="<your client id>";
+clientSecret="<your client secret>";
+tokenFile="<path to token file>";

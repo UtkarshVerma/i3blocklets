@@ -1,35 +1,38 @@
 #!/bin/bash
 #----------------------------------------------------------------------------------------------------
+# Scipt for fetching the unread mail count of Gmail.
+# Uses OAuth2 for authentication.
 # Requires jq - https://stedolan.github.io/jq
 #----------------------------------------------------------------------------------------------------
-#Exit the script if there's no internet
-ping -c 1 8.8.8.8 > /dev/null 2>&1 || exit 33;
+# Exit the script if there's no internet.
+ping -c 1 8.8.8.8 > /dev/null 2>&1 || exit 33
 
-#Path to config file
-configFile="$HOME/$BLOCK_INSTANCE";
+# Path to config file.
+configFile="$HOME/$BLOCK_INSTANCE"
 
-#Exit script if no config file found
+# Exit script if no config file found.
 if [[ ! -f "$configFile" ]]; then
-	echo "Config file not found!";
+	echo "$configFile: No such file or directory";
 	exit 33;
 fi
 
-#Mouse actions for the block
+# Mouse actions for the block.
 case $BLOCK_BUTTON in 
-	1) xdg-open  https://mail.google.com > /dev/null 2>&1 ;;
+	1) xdg-open https://mail.google.com > /dev/null 2>&1 ;;
 esac
 
-#Source variables from config file
-source $configFile;
+# Source variables from config file.
+source $configFile
+eval tokenFile=$tokenFile
 
-#Google API variables
-refreshToken=$(jq '.refresh_token' "$tokenFile" | tr -d \");
+# Google API variables.
+refreshToken=$(jq '.refresh_token' "$tokenFile" | tr -d \")
 
-#Generates JSON to be POSTed
+# Generates JSON to be POSTed.
 generateJSON() {
 	cat << EOF
 {
-	"client_id":"$clientId",
+	"client_id":"$clientID",
 	"client_secret":"$clientSecret",
 	"refresh_token":"$refreshToken",
 	"grant_type":"refresh_token"
@@ -37,19 +40,19 @@ generateJSON() {
 EOF
 }
 
-#Fetch the new access token
+# Fetch the new access token.
 accessToken=$(curl -s https://www.googleapis.com/oauth2/v4/token \
 	-H "Content-Type: application/json" \
-	-d "$(generateJSON)" | jq '.access_token' | tr -d \");
+	-d "$(generateJSON)" | jq '.access_token' | tr -d \")
 
-#Update access_token in tokenFile
-tmp=$(mktemp);
-jq ".access_token = \"$accessToken\"" "$tokenFile" > "$tmp" && mv "$tmp" "$tokenFile";
+# Update access_token in tokenFile.
+tmp=$(mktemp)
+jq ".access_token = \"$accessToken\"" "$tokenFile" > "$tmp" && mv "$tmp" "$tokenFile"
 
-#Fetch unread mails count
+# Fetch unread mails count.
 count=$(curl -s -H "Authorization: Bearer $accessToken" \
-	'https://www.googleapis.com/gmail/v1/users/'"$email"'/messages?q=is:unread' \
-	| jq '.resultSizeEstimate');
+	'https://www.googleapis.com/gmail/v1/users/me/labels/INBOX' \
+	| jq '.messagesUnread')
 
-#Display the count, if non-zero
-[[ $count = "0" ]] || echo $count;
+# Display the count, if non-zero.
+[[ $count = "0" ]] || echo $count
